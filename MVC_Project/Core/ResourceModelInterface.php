@@ -13,4 +13,3 @@ interface ResourceModelInterface
 
 	public function delete($model);
 }
-?>

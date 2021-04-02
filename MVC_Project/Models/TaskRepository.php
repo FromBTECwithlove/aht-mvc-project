@@ -4,41 +4,39 @@ namespace MVC_Project\Models;
 
 use MVC_Project\Models\TaskResourceModel;
 
-/**
- * 
- */
-class TaskRepository
-{
+
+class TaskRepository {
+
 	private $taskResourceModel;
 
-	public function __construct()
-	{
+	// *******************FUNCTION*******************
+	public function __construct() {
+
 		$this->taskResourceModel = new TaskResourceModel();
 	}
 
-	public function add($model)
-	{
+	public function add($model) {
+
 		return $this->taskResourceModel->save($model);
 	}
 
-	public function edit($model)
-	{
-		return $this->taskResourceModel->save($model);
-	}
+	public function delete($id) {
 
-	public function delete($id)
-	{
 		return $this->taskResourceModel->delete($id);
 	}
 
-	public function get($id)
-	{
+	public function update($model) {
+
+		return $this->taskResourceModel->update($model);
+	}
+
+	public function get($id) {
+
 		return $this->taskResourceModel->get($id);
 	}
 
-	public function getAll()
-	{
-		return $this->taskResourceModel->getAll();
+	public function getAll($model) {
+
+		return $this->taskResourceModel->getAll($model);
 	}
 }
-?>

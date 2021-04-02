@@ -9,6 +9,7 @@ class Database
     private static $bdd = null;
 
     private function __construct() {
+    	# code...
     }
 
     public static function getBdd() {
@@ -18,4 +19,3 @@ class Database
         return self::$bdd;
     }
 }
-?>

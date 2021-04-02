@@ -5,127 +5,109 @@ namespace MVC_Project\Core;
 use MVC_Project\Config\Database;
 use PDO;
 
-/**
- * 
- */
-class ResourceModel implements ResourceModelInterface
+class ResourceModel implements ResourceModelInterface 
 {
 	private $table;
 	private $id;
 	private $model;
 
-	public function _init($table, $id, $model)
-	{
+	public function _init($table, $id, $model) {
+
 		$this->table = $table;
 		$this->id = $id;
 		$this->model = $model;
 	}
 
+	// save function
 	public function save($model) {
-		$listItem = [];
-		$properties = $model->getProperties();
 
-		if ($model->id === null) {
-			unset($properties['id']);
+		$item = $model->getProperties();
+
+		$list = [];
+		$cols = [];
+
+		if (in_array('id', $item) == '') {
+			unset($item['id']);
+		}
+		elseif (in_array('id', $item) !== ''){
+			return $item['id'];
 		}
 
-		foreach ($properties as $key => $value) {
-			array_push($listItem, ':' . $key);
+		foreach ($item as $key => $value) {
+			array_push($list, ':' . $key);
 		}
 
-		$columns = [];
-
-		foreach (array_keys($properties) as $k => $v) {
-			if ($v !== 'id') {
-				array_push($columns, $v . ' = ' . $v);
-			}
+		foreach (array_keys($item) as $c) {
+			array_push($cols, $c);
 		}
 
-		$columns = implode(',', $columns);
-		$columnString = implode(',', array_keys($properties));
-		$listString = implode(',', $listItem);
+		$cols = implode(', ', array_keys($item));
+		$val = implode(',', $list);
 
-		if ($model->id === null) {
-
-			$sql = "INSERT INTO {$this->table} ({$columnString}, created_at, updated_at) VALUES ({$listString}, :created_at, :updated_at)";
+		if (in_array('id', $item) == '') {
+			$sql = "INSERT INTO {$this->table}({$cols}, created_at, updated_at)
+			VALUES ({$val}, now(), now())";
 			$result = Database::getBdd()->prepare($sql);
-			$date = array("created_at" => date('Y-m-d H:i:s'), "updated_at" => date('Y-m-d H:i:s'));
-
-			return $result->execute(array_merge($properties, $date));
-		}
-		else
-		{
-			$sql = "UPDATE {$this->table} SET " . $columns .', updated_at = :updated_at WHERE id = :id' ;
-			$result = Database::getBdd()->prepare($sql);
-			$date = array("id" => $model->id, 'updated_at' => date('Y-m-d H:i:s'));
-
-			return $result->execute(array_merge($properties, $date));
+			
+			$req = $result->execute(array_merge($item));
+			
+			return $req;
 		}
 	}
-	// public function save($model) {
-	// 	$sql = "INSERT INTO tasks (title, description, created_at, updated_at) VALUES (:title, :description, :created_at, :updated_at)";
 
-	// 	$req = Database::getBdd()->prepare($sql);
+	// update function
+	public function update($model) {
+		
+		$item = $model->getProperties();
 
-	// 	return $req->execute([
-	// 		'title' => $title,
-	// 		'description' => $description,
-	// 		'created_at' => date('Y-m-d H:i:s'),
-	// 		'updated_at' => date('Y-m-d H:i:s')
+		$id = $item['id'];
+		$title = $item['title'];
+		$des = $item['description'];
 
-	// 	]);
-	// }
+		if (in_array('id', $item) !== '') {
 
+			$sql = "UPDATE {$this->table}
+			SET title = '$title', description = '$des', updated_at = now() WHERE id = $id" ;
+			$result = Database::getBdd()->prepare($sql);
+
+			$req = $result->execute();
+
+			return $req;
+		}
+	}
+
+	// getElementById function
 	public function get($id) {
+
+		// prepare sql command to execute getElementById
+		$sql = "SELECT * FROM {$this->table} WHERE id = ?";
+		$result = Database::getBdd()->prepare($sql);
+		$result->execute([$id]);
+		
+		return $result->fetch(PDO::FETCH_OBJ);
+
 		// $class = get_class($this->model);
-		// $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-		// $result = Database::getBdd()->prepare($sql);
 		// $result->setFetchMode(PDO::FETCH_INTO, new $class);
-		// $result->execute(['id' => $id]);
-
-		// return $result->fetch();
-
-		// $sql = "SELECT * FROM {$this->table} WHERE id = $id";
-		// $result = Database::getBdd()->prepare($sql);
-		// $result->execute();
-		// return $result->fetch();
 	}
 
-	public function getAll()
-	{
+	// get all of data from db - create getAll function
+	public function getAll($model) {
 
-		// $properties = implode(',', array_keys($model->getProperties()));
-		// $sql = "SELECT {$properties} FROM {$this->table}";
-		// $result = Database::getBdd()->prepare($sql);
-
-		// return $result->fetchAll(PDO::FETCH_OBJ);
-
-		$sql = "SELECT * FROM {$this->table}";
+		$properties = implode(',', array_keys($model->getProperties()));
+		$sql = "SELECT {$properties} FROM {$this->table}";
 		$result = Database::getBdd()->prepare($sql);
 		$result->execute();
-		return $result->fetchAll();
+
+		return $result->fetchAll(PDO::FETCH_OBJ);
 	}
 
-	public function edit($id, $title, $description)
-	{
-		$sql = "UPDATE tasks SET title = :title, description = :description , updated_at = :updated_at WHERE id = :id";
+	// create delete function
+	public function delete($id) {
 
+		$sql = "DELETE FROM {$this->table} WHERE id = $id";
 		$req = Database::getBdd()->prepare($sql);
 
-		return $req->execute([
-			'id' => $id,
-			'title' => $title,
-			'description' => $description,
-			'updated_at' => date('Y-m-d H:i:s')
-
-		]);
-	}
-
-	public function delete($id)
-	{
-		$sql = "DELETE FROM {$this->table} WHERE id = ?";
-		$req = Database::getBdd()->prepare($sql);
-		return $req->execute([$id]);
+		// return result executed
+		return $req->execute();
 	}
 }
-?>

@@ -17,19 +17,13 @@ class Controller
     function set($d)
     {
         $this->vars = array_merge($this->vars, $d);
+        // print_r ($this->vars);
     }
 
     function render($filename)
     {
         extract($this->vars);
         ob_start();
-
-        // $filepath = str_replace('Controller', '', get_class($this));
-        // $filepath = str_replace('MVC_Project\s', '', $filepath);
-        // $filepath = ucfirst(str_replace('\\', '', $filepath));
-        // $filepath = ROOT . '/Views/' . $filepath . '/' . $filename . '.php';
-        
-        // require($filepath);
         
         require(ROOT . 'Views/' . ucfirst(str_replace('MVC_Project\\s\\', '', str_replace('Controller', '', get_class($this)))) . '/' . $filename . '.php');
 
@@ -62,4 +56,3 @@ class Controller
     }
 
 }
-?>
