@@ -2,9 +2,6 @@
 
 namespace MVC_Project\Core;
 
-/**
- * 
- */
 interface ResourceModelInterface
 {
 	public function _init($table, $id, $model);

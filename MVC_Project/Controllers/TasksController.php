@@ -15,12 +15,12 @@ use MVC_Project\Models\TaskModel;
 
 class TasksController extends Controller
 {
+
     private $taskRepository;
 
     // __construct function
     public function __construct()
     {
-        // create new TaskRepository object
         $this->taskRepository = new TaskRepository();
     }
 
@@ -34,15 +34,14 @@ class TasksController extends Controller
     }
 
     // create function
-    function create()
+    public function create()
     {
-
         // extract($_POST); //Treat keys as variable names and values as variable values
         if (isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['description']))
         {
             $this->model = new TaskModel();
             
-            $this->model->setId('');
+            $this->model->setId(null);
             $this->model->setTitle($_POST['title']);
             $this->model->setDescription($_POST['description']);
 
@@ -51,14 +50,12 @@ class TasksController extends Controller
                 header("Location: " . WEBROOT . "Tasks/index");
             }
         }
-
         $this->render("create");
     }
 
     // edit function
-    function edit($id)
+    public function edit($id)
     {
-
         $d['tasks'] = $this->taskRepository->get($id);
         
         if (isset($_POST['title']) && !empty($_POST['title']) && isset($_POST['description']))
@@ -74,7 +71,7 @@ class TasksController extends Controller
             $this->model->setTitle($_POST['title']);
             $this->model->setDescription($_POST['description']);
 
-            if ($this->taskRepository->update($this->model))
+            if ($this->taskRepository->add($this->model))
             {
                 header("Location: " . WEBROOT . "Tasks/index");
             }
@@ -84,12 +81,10 @@ class TasksController extends Controller
     }
 
     // delete function
-    function delete($id)
+    public function delete($id)
     {
-        // the condition for the delete action
         if ($this->taskRepository->delete($id))
         {
-            // recdirect to index page
             header("Location: " . WEBROOT . "Tasks/index");
         }
     }

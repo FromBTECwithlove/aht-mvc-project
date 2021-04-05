@@ -18,15 +18,18 @@ class TaskModel extends Model
 		# code...
 	}
 
-	public function setId($id) {
+	public function setId($id)
+	{
 		$this->id = $id;
 	}
 
-	public function setTitle($title) {
+	public function setTitle($title)
+	{
 		$this->title = $title;
 	}
 
-	public function setDescription($description) {
+	public function setDescription($description)
+	{
 		$this->description = $description;
 	}
 
@@ -38,15 +41,18 @@ class TaskModel extends Model
 	// 	$this->updated_ad = $updated_ad;
 	// }
 
-	public function getId() {
+	public function getId()
+	{
 		return $this->id;
 	}
 
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->title;
 	}
 
-	public function getDescription() {
+	public function getDescription()
+	{
 		return $this->description;
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace MVC_Project\Webroot;
+
 use MVC_Project\Dispatcher;
 use MVC_Project\Config\Core;
 use MVC_Project\Router;
@@ -12,5 +14,3 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $dispatch = new Dispatcher();
 $dispatch->dispatch();
-
-?>

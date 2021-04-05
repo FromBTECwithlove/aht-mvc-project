@@ -11,5 +11,3 @@ class Request
 		$this->url = $_SERVER["REQUEST_URI"];
 	}
 }
-
-?>

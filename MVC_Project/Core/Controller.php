@@ -17,7 +17,6 @@ class Controller
     function set($d)
     {
         $this->vars = array_merge($this->vars, $d);
-        // print_r ($this->vars);
     }
 
     function render($filename)
@@ -54,5 +53,4 @@ class Controller
             $form[$key] = $this->secure_input($value);
         }
     }
-
 }
